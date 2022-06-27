@@ -16,10 +16,18 @@ Report highlights the differences between customers who did and did not accept t
 
 ### Analysis of customers using the "Bar"  coupon
 
-Reference: [Bar Analysis](Bar_Analysis.ipynb) notebook has the associated code for this analysis
-
+Before we do the analysis, we need to clean the data. As shown the [Bar Analysis](Bar_Analysis.ipynb) notebook we analysed the data to drop some columns and rows. We also converted age to numeric values, so additional analysis could be done on that dataset.
 Lets look at the data of coupon distribution first
 
-![](images/coupon_distribution.png)
+To start with look lets look at overall distrubution of data. We plotted this using the subplot function. See below for the data
+
+![](images/overall_distr.png)
+
+Next we went on to analyse overall coupon distribution for bar coupons as show in the below figure.
+
+![](images/coupon_acceptance_rate_barcoupons.png)
+
+
+
 
 
