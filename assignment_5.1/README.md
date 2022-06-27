@@ -28,6 +28,19 @@ Next we went on to analyse overall coupon distribution for bar coupons as show i
 ![](images/coupon_acceptance_rate_barcoupons.png)
 
 
+Based on the table below, we observe that acceptance proportion goes up if the patrons go to bar more often. Also, people with lower income value the coupon more and are almost twice as likely to accept it.
 
+Table showing comparision of various data points we collected in the examples above
+
+|Condition|Additional Condition|Acceptance proportion|
+|-----|-----|-----|-----|
+|Bar coupons accepted|-|0.41191845269210664|
+|Bar coupons accepted|Went to bar less than 3 times|0.6464379947229552
+|Bar coupons accepted|Went to bar more than 3 times|0.7616580310880829
+|Bar coupons accepted|Went to bar more than once and Age 25+|0.6898263027295285
+|Bar coupons accepted|Went to bars more than once a month with passengers that were not a kid and had occupations other than farming, fishing, or forestry|0.7094339622641509
+|Bar coupons accepted|Went to bars more than once a month, had passengers that were not a kid, and were not widowed|0.6853146853146853
+|Bar coupons accepted|Went to bars more than once a month and are under the age of 30|0.7195121951219512
+|Bar coupons accepted|Went to cheap restaurants more than 4 times a month and income is less than 50K.|0.8181818181818182
 
 
