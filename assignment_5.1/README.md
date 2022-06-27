@@ -17,3 +17,9 @@ Report highlights the differences between customers who did and did not accept t
 ### Analysis of customers using the "Bar"  coupon
 
 
+
+Lets look at the data of coupon distribution first
+
+![](images/coupon_distribution.png)
+
+For more details, see [Bar Analysis](.Bar_Analysis.ipynb) notebook
