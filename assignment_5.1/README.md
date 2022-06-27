@@ -22,4 +22,4 @@ Lets look at the data of coupon distribution first
 
 ![](images/coupon_distribution.png)
 
-For more details, see [Bar Analysis](.Bar_Analysis.ipynb) notebook
+For more details, see [Bar Analysis](Bar_Analysis.ipynb) notebook
