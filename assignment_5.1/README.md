@@ -33,7 +33,7 @@ Based on the table below, we observe that acceptance proportion goes up if the p
 Table showing comparision of various data points we collected in the examples above
 
 |Condition|Additional Condition|Acceptance proportion|
-|-----|-----|-----|-----|
+|-----|-----|-----|
 |Bar coupons accepted|-|0.41191845269210664|
 |Bar coupons accepted|Went to bar less than 3 times|0.6464379947229552
 |Bar coupons accepted|Went to bar more than 3 times|0.7616580310880829
