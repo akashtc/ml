@@ -117,8 +117,16 @@ Once we did that, I checked the data shape and figured out how many null values 
 
 ![](images/data_dropyear.png)
 
+Next I checked the unique values in the data.
+
+![](images/data_unique.png)
+
+I also cleaned up data further and then used one-hot encoder to setup 
+
+
 
 ## Modelling
+
 
 ## Evaluations
 
