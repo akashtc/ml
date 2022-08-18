@@ -86,6 +86,10 @@ As a car dealership, profit is tied to car selling quickly and with a good margi
 
 ## Data Understanding
 
+All the analysis can be found in the below python notebook and can be used to follow the code and operations explained below.
+
+![](UserCarPriceModelling.ipynb)
+
 After considering the business understanding, we want to get familiar with our data. For doing that, I first loaded the dataframe by reading the csv file. I also sampled the data to see what type of data we are looking at
 
 ![](images/data_sample.png)
@@ -119,13 +123,68 @@ Once we did that, I checked the data shape and figured out how many null values 
 
 Next I checked the unique values in the data.
 
-![](images/data_unique.png)
+```
+Unique no. of years 112
+Unique no. of manufacturer 42
+Unique no. of model 26175
+Unique no. of condition 6
+Unique no. of cylinders 8
+Unique no. of fuel 5
+Unique no. of title_status 6
+Unique no. of transmission 3
+Unique no. of drive 3
+Unique no. of type 13
+Unique no. of paint_bolor 12
+```
 
-I also cleaned up data further and then used one-hot encoder to setup 
+I further looked into the model column and noticed that manufacturer columns can be used to rebuild the data for missing models. I did a lambda transform and some additional analysis to populate the missing data. 
 
+Once models, were figured out I dropped the NaN values for those and corrected the data for other columns to `other` so I can consider them for my analysis
 
+I also decided to drop ID, model and VIN data to sanitize the data further.
+
+Before going further, I checked the distribution of price
+
+![](images/data_dist_price.png)
+
+I also did a box plot of categorical values to see how they are distributed
+
+![](images/dist_cat_values.png)
+
+As you can see the state value was very noisy, I thought it may be better to create a smaller set by mapping the states using the logic below:
+
+```
+Northeast: ct, me, ma, nh, ri, vt, nj, ny, and pa
+Midwest: il, in, mi, oh, wi, ia, ks, mn, mo, ne, nd, and sd
+South: de, fl, ga, md, nc, sc, va, dc, wv, al, ky, ms, tn, ar, la, ok, and tx
+West: az, co, id, mt, nv, nm, ut, wy, ak, ca, hi, or, and wa
+```
+
+Since price had lot of outliers, I decided to reduce the data further to cars between 500 and 50000 since that seems to be a more resonable range for a typical used car. I then reviewed the histogram again for my data
+
+![](images/data_latest_dist_num.png)
+
+Next I focused on categorical values. I started by dropping duplicates and did some kde plots on processed data. This helped me look at relationship between different variables
+
+![](images/data_kde_lots.png)
+
+![](images/data_kde_plots_2.png)
+
+![](images/data_kde_plots_3.png)
+
+You can follow-along in my notebook for a series of hypothesis that I validated with my data.
+
+Since the data still had some categorical values, I did a transform to bring data in numerical format
+
+![](images/data_encoding.png)
+
+I also tranformed pricing data using log transform before proceeding to next step. The image below shows the final data snapshot before starting the modeling.
+
+![](images/data_final_snapshot.png)
 
 ## Modelling
+
+
 
 
 ## Evaluations
