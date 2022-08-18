@@ -86,9 +86,7 @@ As a car dealership, profit is tied to car selling quickly and with a good margi
 
 ## Data Understanding
 
-All the analysis can be found in the below python notebook and can be used to follow the code and operations explained below.
-
-![](UserCarPriceModelling.ipynb)
+All the analysis can be found in the python [notebook](UserCarPriceModelling.ipynb) to follow the code and operations explained below.
 
 After considering the business understanding, we want to get familiar with our data. For doing that, I first loaded the dataframe by reading the csv file. I also sampled the data to see what type of data we are looking at
 
@@ -184,15 +182,82 @@ I also tranformed pricing data using log transform before proceeding to next ste
 
 ## Modelling
 
+First I extracted the feature importance to understand which features are important
 
+![](images/data_feature_importance.png)
+
+Then I did a training and test data split and transformed the data
+
+```
+VERBOSE = 0
+SEED = 42
+
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.model_selection import train_test_split
+
+X_train , X_test, y_train, y_test = train_test_split(X, y, random_state = SEED , test_size=0.2)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+```
+
+Follow along the python notebook for more details.
+
+Using LinearRegression model, I saw accuracy was pretty low (38%). I tried the RandomForestRegressor model which had a much better accuracy (97% on training set, and 83% on test set)
+
+I also applied Ridge and Lasso regressions to further tune the model. 
 
 
 ## Evaluations
 
+Based on the modeling, our team can provide dealers with price forecast based on their inventory. The accuracy of LinearRegression is not very high, so I tried the random forest regressor which yielded much better accuracy against our training and test data. There are some additional hypothesis that we were able to verify for our dealers. They are listed below for reference as a FAQ with more details on plots that provide details behind these answers in earlier section of notebook.
+
+Q: Are used cars with higher mileage cheaper 
+
+A: True
+
+Q: Used cars with better appearance should be expensive
+
+A: True
+
+Q: Used cars in west or northeast regions should cost more.
+
+A: False
+
+Q: Used car in expensive states like CA cost more
+
+A: False 
+
+Q: Used cars which come from big manufacturer should cost more
+
+A: True
+
+Q: Used cars with electric fuel should be expensive
+
+A: False
+
+Q: Used cars with SUV, pickup or truck type should cost more 
+
+A: True
+
+Q: Used cars with automatic transmission should cost more
+
+A: True
 
 
 ## Next steps and recommendations
 
 
+Based on the findings from analysis, 4 key features, along with their importance is below
 
+|Feature name |             Importance|
+|-------------|-----------------------|
+|year                     | 0.362827|
+|condition                | 0.113715|
+|odometer                 | 0.111511|
+|drive_fwd                | 0.107805|
+
+If you want to extract maximum value for your car look at year followed by condition and odometer rating. This would help dealers decide what cars to stock if they had a space constraint. It will also help them manage which cars to stock in showroom vs in warehouse.
 
