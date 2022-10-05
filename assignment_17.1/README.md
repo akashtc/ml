@@ -80,7 +80,7 @@ Once the data was in numerical form, I convered the data into training and test 
 The table below shows comparision of various models
 
 | Models | Train Time	| Train Accuracy	| Test Accuracy| 
-| 			
+| ------|------|------| ------|
 | k-nearest neighbors| 	5.72 µs	| 91.20%	| 88.58%| 
 | logistic regression	| 6.91 µs	| 89.94%	| 89.35%| 
 | decision trees	| 5.96 µs	| 90.94%	| 89.49%| 
