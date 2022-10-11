@@ -90,6 +90,14 @@ The table below shows comparision of various models
 
 ## Next steps and recommendation
 
-As seen from the above table "k-nearest neighbors" is the best algorithm in terms of trainig time and accuracy. We would recommend using this model to predict the success of a contact.
+As seen from the above table "k-nearest neighbors" is the best algorithm in terms of trainig time and accuracy. We would recommend using this model to predict the success of a contact. 
 
+I also used Gridsearch and cross validaiton to tune the paramaters. See table below for performance of the model and various parameters and the scores.
 
+|  GridSearchCV Params	 |  Best Params	|  Best Score |
+| ------|------|------|
+|Estimators range 10-200	|{'n_estimators': 30}|	0.792954|
+|Max depth 2-20	|{'max_depth': 7, 'min_samples_split': 300}	|0.793099|
+|Min sample 200-2100	|{'min_samples_leaf': 30, 'min_samples_split': ...	|0.793193|
+|Max Features 2-8|	{'max_features': 6}	|0.793093|
+|Subsample 0.6-0.9|	{'subsample': 0.85}|	0.794472|
