@@ -1,12 +1,10 @@
 ### Spotify Recommendation System
 
-Goal of this project is to create a content-based filtering Spotify Song Recommendation System.
-
-Have you ever thought how “Recommended (based on what’s in your playlist)” on your Spotify works? This project helps answer this question and walks through the process of building machine learning pipeline that can help predict what user would like to listen to next.
+Goal of this project is to create a content-based filtering Spotify Song Recommendation System. As part of creating this system, one of the essential part was to understand how Spotify understands ‘popularity’. Have you ever thought how “Recommended (based on what’s in your playlist)” on your Spotify works? This project helps answer this question and walks through the process of building machine learning pipeline that can help predict what user would like to listen to next.
 
 #### Executive summary
 
-Spotify is a platform that makes money through end users via subscriptions. Spotify song recommendation system will help user discover engaging content to increase DAU (daily active user) metrics. We will use machine learning to filter out the content and present engaging content to the user for increasing their product usage.
+Spotify is a platform that makes money through end users via subscriptions. Spotify song recommendation system will help user discover engaging content to increase DAU (daily active user) metrics. We will use machine learning to filter out the content and present engaging content to the user for increasing their product usage. 
 
 #### Rationale
 
@@ -19,6 +17,22 @@ I first started by taking a look at the dataset in [Kaggle](https://www.kaggle.c
  - data.csv
  - data_by_genres.csv
  - data_by_year.csv
+ 
+Just for additinal context, some of the fields in this dataset are explained below:
+
+ - Instrumentalness: This value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is
+ 
+ - Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one
+ 
+ - Liveness: This value describes the probability that the song was recorded with a live audience. According to the official documentation “a value above 0.8 provides strong likelihood that the track is live”
+ 
+ - Speechiness: “Speechiness detects the presence of spoken words in a track”. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech
+ 
+ - Energy: “(energy) represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy”
+ 
+ - Danceability: “Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable”
+ 
+ - Valence: “A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)”.
  
 Next, I wanted to explore the spotify's Web API to see if I can extract my personal playlists data. The base URI for all Web API requests is https://api.spotify.com/v1 and spotipy wraps this up neatly for us to use. 
 
@@ -80,47 +94,103 @@ Spotify publishes some of the fields below which will be useful to understand si
 
 First we have to do some data preprocessing for the imported data. As part of data preprocessing, we will find what data is useful and convert some data (eg. genres) to lists for easier operations. As part of useful data selection, we will first drop duplicates in our dataset. Then, we could look into which features are important. 
 
-To do this, I first examinded the data to see if there are is any NULL data
+To do this, I first examined the data to see if there are is any NULL data. Follow along my juptyer notebook for these steps [here](Spotify_Recommendation_System.ipynb)
 
 ![](images/year_non_null.png)
 ![](images/genre_non_null.png)
 ![](images/data_non_null.png)
 
-By quick examination following short list of categories could be setup:
+I did clean up for data by stripping unnessary characters and removing non-english characters
 
-- Metadata
-	- id
-   	- genres
-   	- artist_pop
-   	- track_pop
-- Audio
-	- Mood: Danceability, Valence, Energy, Tempo
-	- Properties: Loudness, Speechiness, Instrumentalness
-	- Context: Liveness, Acousticness
-	- metadata: key, mode
+![](images/clean_chars.png)
+![](images/clean_non_english.png)
 
-- Text
-	- track_name
-	
+As seen, there are some zero values in the tempo column, but none in the year or duration.
 
-After data preprocessing, we can work on "Feature Generation" using a pipeline for feature generation. Methods like 'One-hot Encoding' and 'Normalization' would be useful for this step.
+![](images/non_zero_values.png)
 
-The next step is to perform content-based filtering based on the song features we have. To do so, we concatenate all songs in a playlist into one summarization vector. Then, we find the similarity between the summarized playlist vector with all songs (not including the songs in the playlist) in the database. Then, we use the similarity measure retrieved the most relevant song that is not in the playlist to recommend it.
+I fixed the tempo values by imputing the values.
 
-There are three steps in this section:
+![](images/impute_tempo_values.png)
+ 
+Next I looked at the correlation between different datasets. From this graph we can start to make connections. E.g, popularity and year have a strong connection. Songs that come out that year have high popularity. Energy and loudness have a strong connection, as we can assume that more loudness = more energy. Danceability and valence are also fairly high, as valence is the "happy" level in music. Dancing is happy!
 
-- Choose playlist: Retrieve a playlist
-- Extract features:Retireve playlist-of-interest features and non-playlist-of-interest features
-- Find similarity: Compare the summarized playlist features with all other songs.
+![](images/data_corr_.png)
 
+I also looked at the feature correlation
+
+![](images/feature_corr.png)
+
+I looked at the Music data over time. I grouped the data by year to understand the distribution better. As you can see most of the songs are from 1950-2010 and are fairly evenly distrubuted
+
+![](images/music_distribution.png)
+
+Further, I reviewed some of the sound features. I ploted them to see how those trends evolved or changed over time. As you can see acousticness and instrumentalness decreased over time, but energy and danceability has trended upwards. These trends may be helpful in predictions.
+
+![](images/sound_distribution.png)
+
+This dataset contains the audio features for different songs along with the audio features for different genres. We can use this information to compare different genres and understand their unique differences in sound.
+
+![](images/genre_distribution.png)
+
+Next, I did some analysis to understand the data. A
+
+As you can see, upwards trend in danceability from 1920 until a downward trend from approximately 1930-35. would assume because of the war. This graph shows an upward trend in danceability from about 1945-1950 onwards... coinciding with the end of WWII and the onset of the 60. Fast upward trend from the 1950s onward, probably from the end of WWII and the ability to make more music, as well as people being able to listen to music, AND the steep jump in the early 2000s as a result of streaming.
+
+![](images/year_popularity_.png)
+
+Interesting...some songs are loud but low energy, and fewer still that are high energy but quieter than average as seen at the top and tail ends of the graph. The general consensus is that as the songs increase in loudness, the energy increases.
+
+![](images/energy_loudness.png)
+
+I also took a closer look at top 10 tracks and artists.
+
+![](images/top_10_artists.png)
+![](images/top_10_songs.png)
+
+Another data point I wanted to check was how may songs are released per year, and whether that data is skewed for specific years. 
+
+![](images/songs_per_year.png)
+
+For the top generes, I checked if there is specific pattern around audio features
+
+![](images/top_10_genres.png)
+
+Next I wanted to check if there is specific clustering of data. For this I used the KMeans clustering algorithm. and fitted a pipeline and plotted it for genres.
+
+![](images/kmeans_genres.png)
+
+The essential question for me was: could we use a song’s attributes to predict a track’s ‘popularity’, so I looked into building some models and understanding how this could be predicted well. For this I built two models. In next sectiion I set up the models and do GridSearch to find the best parameters.
+
+Next we examine if there is any specific signatures for songs too. 
+
+![](images/kmeans_songs.png)
+
+##### Building models and Gridsearch for parameters
+
+Lets just first fit DecisionTree algorithm. As you can see the mean square error is pretty high with default parameters.
+
+![](images/dtree_default_params.png)
+
+Using the GridSearchCV, we fitted the model again to reduce the mean square error
+
+
+![](images/dree_gridsearch.png)
+
+The resulting dtree graph is below
+
+![](images/dtree_improved_score.png)
+![](images/tree.eps)
+
+The other model I was to use KNeighborsRegressor. The steps below show the model and hyperparameter tuning done for this model
+
+![](images/kNN_Model.png)
 
 #### Results
 
-Using the content-based filtering system, we are able to help end users discover new engaging content. 
 
 #### Next steps
 
-Success for this could be measured by segmenting users into 2 groups. Group A could be users who are provided these recommendations, and Group B could be users who are not provided these recommendations. Next, we could compare daily active usage metrics (eg. minutes spent by users on Spotify) across these two groups for a few months to understand if this this recommendation system is useful or not for achieving the business goals.
 
 ##### Contact and Further Information
 
