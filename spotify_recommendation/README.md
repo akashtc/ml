@@ -231,7 +231,7 @@ Follow along this analysis in [Exploratory_Data_Analysis_for_merged_dataset.ipyn
 First we explore the distribution of how many different songs each user listens to. The purpose of this is to make sure that our data makes sense with real life user listening habits and to also make sure the data is valid enough to train our recommendation machine.
 
 Number of unique songs a user listens to is shown below
-![](images/eda_1.png)
+![](images/unique_songs_per_listener_.png)
 
 It does appear that there are quite a few outliers in regards to the amount of songs a user listens to. In this case, what we are concerned about is having a dataset that would not allow us to train a recommendation system. In our data, only 3372 out of 74899 users only listened to one song (4.5%) so we can conclude that our data is valid for our model.
 
@@ -241,23 +241,53 @@ Next we look at the number of times each song is listened to by users. We want t
 
 From the boxplot you can see that there are a few songs with very high listen counts. Below is a closer look at the songs with a listen count greater than 10,000.
 
-![](images/box_plot.png)
+![](images/box_plot_number_of_times.png)
 
 These songs would be considered outliers, however we do not want to remove them from our data. But we do want to keep these songs in mind during our modeling stage so that they will not be recommended to users solely due to their popularity.
 
+Figure below shows the distribution of number of times a song is listened to.
+
+![](images/dist_number_of_times.png)
+
+I also examined most popular songs (>10k listens)
+
+![](images/Songs_gt_10k.png)
+
 - How many unique users listen to each song?
 
-Next we looked at the distribution of the number of unique users that listen to each song. We explored this to see if the songs with high listen counts were caused by certain users listening to these songs an extreme amount of times as this could potentially skew our data.
+Next we looked at the distribution of the number of unique users that listen to each song. We explored this to see if the songs with high listen counts were caused by certain users listening to these songs an extreme amount of times as this could potentially skew our data. The scatterplot shows that there is a relationship between number of listens and number of users. With the exception of a couple of outliers, the number of users that listen to a song increases as the number of listens increases. This tells us that the listen count of our popular songs is not skewed by a few users with extreme listen counts.
 
-![](images/unique_count.png)
+![](images/Scatterplot_unique_users.png)
 
-![](images/box_plot_unique_count.png)
+- Whats the total listen count of each user?
 
-![](images/most_popular.png)
+Now we want to see the distribution of the amount of times a user listens to any song (total listen count). Again, if a large amount of the users also listen once this could make our dataset not usable for training a recommendation engine.
 
-The scatterplot shows that there is a relationship between number of listens and number of users. With the exception of a couple of outliers, the number of users that listen to a song increases as the number of listens increases. This tells us that the listen count of our popular songs is not skewed by a few users with extreme listen counts.
+![](images/listen_count_per_user.png)
 
-![](images/scatter_plot_.png)
+See below for box plot of listen count
+
+![](images/box_plot_total_listen_count.png)
+
+Only 2065 users have a listen count of one. This is a low percentage, making our dataset valid for building our model.
+
+For further analysis, I explored the data to see how listen count evolved over the decade
+
+![](images/listen_count_per_decade.png)
+
+I also compared some important features to listen count
+
+![](images/danceability_vs_listen_count.png)
+
+![](images/valence_vs_listen_count.png)
+
+I also looked at histogram of important features to understand if these are any big anomalies.
+
+![](images/hist_danceability.png)
+
+![](images/hist_top_energy.png)
+
+![](images/hist_top_songs.png)
 
 
 ######  Key Findings
@@ -292,21 +322,22 @@ The image below shows an example of the ROC curve. The shaded area is AUC (Area 
 
 In our case, since we have two classes our baseline AUC is 0.5. If our AUC is 0.5, this tells us our model has no capability of distinguishing between our two classes. We aim to get the AUC of our model as close to 1 as possible.
 
-####### XGBoost:
+####### XGBoost
 
 We first train an XGBoost model on our training set. Without tuning the hyperparameters, the base model gives us an AUC score of 0.6026. After evaluating the feature importance of the model and tuning subsample, colsample_bytree, max_depth, learning_rate and n_estimators, our XGBoost model gives us an AUC score of .657. This AUC tells us that XGBoost has a 66% chance of distinguishing between our two classes of high listen counts and low listen counts.
 
-######## Feature Importance:
+######## Feature Importance
 
 Now that we have extracted these latent factors from matrix factorization. Let’s see how much of an effect these features have on our model. To do this, we use the feature_importances_ feature of our trained XGBoost model.
 
 You can see that the user latent factors have very high ‘importance’ in comparison to our other features. However, our song or item latent factors have low ‘importance’ in compared to our other features. This could be because we already have features of the songs so the additional song latent factors do not add any value.
 The user latent factors hold a lot of weight when predicting. This makes sense in relation to our final objective of recommending songs to a user. Of course factors of a user are important when choosing songs to recommend to that user. In this model we dropped the 9 least important features.
 
-#######Random Forest:
+#######Random Forest
+
 To see if we can increase the models score, we train a Random Forest classifier to be ensembled with our XGBoost model. After training the Random Forest model and increasing the number of trees, the classifier gives us an AUC score of .669. Random Forest has a 67% chance of correctly predicting between our two classes. This score is higher than XGBoost so we then ensemble the two models by averaging their predictions and see if it produces an even higher AUC score.
 
-####### Ensemble:
+####### Ensemble
 
 To create a final model that uses both our trained XGBoost and Random Forest classifiers, we take an average of the predicted probabilities of the two classes. The averaged probability is then used to predict a class.
 This ensembled model gives us an AUC score of .68. This is a .07 increase from our base XGBoost model. This AUC tells us that our model has a 68% chance of correctly distinguishing between our two classes.
