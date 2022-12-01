@@ -294,7 +294,7 @@ I also looked at histogram of important features to understand if these are any 
 
 This analysis tells us that we have a valid dataset to begin training our recommendation engine. There are some songs that are 'outliers' in regards to listen count however we will not remove these outliers. We will just keep these songs in mind during the modeling stage and make sure they are not recommended to a lot of users solely due to their popularity.
 
-##### Recommendation System
+#### Recommendation System
 
 ######  Approach
 
@@ -322,18 +322,18 @@ The image below shows an example of the ROC curve. The shaded area is AUC (Area 
 
 In our case, since we have two classes our baseline AUC is 0.5. If our AUC is 0.5, this tells us our model has no capability of distinguishing between our two classes. We aim to get the AUC of our model as close to 1 as possible.
 
-####### XGBoost
+###### XGBoost
 
 We first train an XGBoost model on our training set. Without tuning the hyperparameters, the base model gives us an AUC score of 0.6026. After evaluating the feature importance of the model and tuning subsample, colsample_bytree, max_depth, learning_rate and n_estimators, our XGBoost model gives us an AUC score of .657. This AUC tells us that XGBoost has a 66% chance of distinguishing between our two classes of high listen counts and low listen counts.
 
-######## Feature Importance
+###### Feature Importance
 
 Now that we have extracted these latent factors from matrix factorization. Let’s see how much of an effect these features have on our model. To do this, we use the feature_importances_ feature of our trained XGBoost model.
 
 You can see that the user latent factors have very high ‘importance’ in comparison to our other features. However, our song or item latent factors have low ‘importance’ in compared to our other features. This could be because we already have features of the songs so the additional song latent factors do not add any value.
 The user latent factors hold a lot of weight when predicting. This makes sense in relation to our final objective of recommending songs to a user. Of course factors of a user are important when choosing songs to recommend to that user. In this model we dropped the 9 least important features.
 
-#######Random Forest
+###### Random Forest
 
 To see if we can increase the models score, we train a Random Forest classifier to be ensembled with our XGBoost model. After training the Random Forest model and increasing the number of trees, the classifier gives us an AUC score of .669. Random Forest has a 67% chance of correctly predicting between our two classes. This score is higher than XGBoost so we then ensemble the two models by averaging their predictions and see if it produces an even higher AUC score.
 
