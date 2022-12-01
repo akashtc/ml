@@ -1,6 +1,6 @@
 ### Spotify Recommendation System
 
-Goal of this project is to create a content-based filtering Spotify Song Recommendation System. As part of creating this system, one of the essential part was to understand how Spotify understands ‘popularity’. Have you ever thought how “Recommended (based on what’s in your playlist)” on your Spotify works? This project helps answer this question and walks through the process of building machine learning pipeline that can help predict what user would like to listen to next.
+Goal of this project is to create a content-based filtering Spotify Song Recommendation System. As part of creating this system, one of the essential part was to understand how Spotify understands ‘popularity’. Have you ever thought how “Recommended (based on what’s in your playlist)” on your Spotify works? This project helps answer this question and walks through the process of building machine learning pipeline that can help predict what user would like to listen to next. Please refer to the included presentation for [slides](Spotify_recommendation_engine_slides.pdf)
 
 #### Executive summary
 
