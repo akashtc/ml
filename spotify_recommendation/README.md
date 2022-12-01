@@ -304,10 +304,13 @@ For our model we will randomly split the dataset into three sets. There will be 
 
 ######  Matrix Factorization
 
-Matrix factorization is to find out two matrices such that when you multiply them you will get back the original matrix. Matrix factorization can be used to discover latent features underlying the interactions between two different kinds of entities. The purpose of performing matrix factorization in our project is to extract latent factors of the users and the songs. Be
-low is a matrix of our user-item pairs.
+Matrix factorization is to find out two matrices such that when you multiply them you will get back the original matrix. Matrix factorization can be used to discover latent features underlying the interactions between two different kinds of entities. The purpose of performing matrix factorization in our project is to extract latent factors of the users and the songs. Below is a matrix of our user-item pairs.
+
+![](images/matrix_factorization.png)
 
 The intuition behind using matrix factorization is that there should be some latent features that determine how many times a user listens to a song. For example, two users would listen to the same song if they both like the genre of the song. Therefore if we can discover these latent features, we can add them as additional features to our dataset since the features associated with the user should match with the features associated with the song.
+
+![](images/latent_factors.png)
 
 The images above show the values of the latent factors for the user (u) and song (s). These factors will now be used in our classification model. Although we already have some song features from Spotify, the latent factors of the user should help the strength of our recommendation system.
 
@@ -320,6 +323,8 @@ After adding on the latent factors found from matrix factorization, we then perf
 To evaluate our model we will use ROC AUC score because we have a binary classification with skewed classes. AUC - ROC curve is a performance measurement for classification problem at various thresholds settings. ROC is a probability curve and AUC represents measure of separability. It tells how much model is capable of distinguishing between classes.
 The image below shows an example of the ROC curve. The shaded area is AUC (Area Under Curve) and the axis’ represent False Positive and True Positive Rates.
 
+![](images/tp_vs_fp_rate.png)
+
 In our case, since we have two classes our baseline AUC is 0.5. If our AUC is 0.5, this tells us our model has no capability of distinguishing between our two classes. We aim to get the AUC of our model as close to 1 as possible.
 
 ###### XGBoost
@@ -330,6 +335,8 @@ We first train an XGBoost model on our training set. Without tuning the hyperpar
 
 Now that we have extracted these latent factors from matrix factorization. Let’s see how much of an effect these features have on our model. To do this, we use the feature_importances_ feature of our trained XGBoost model.
 
+![](images/feature_importance.png)
+
 You can see that the user latent factors have very high ‘importance’ in comparison to our other features. However, our song or item latent factors have low ‘importance’ in compared to our other features. This could be because we already have features of the songs so the additional song latent factors do not add any value.
 The user latent factors hold a lot of weight when predicting. This makes sense in relation to our final objective of recommending songs to a user. Of course factors of a user are important when choosing songs to recommend to that user. In this model we dropped the 9 least important features.
 
@@ -337,7 +344,7 @@ The user latent factors hold a lot of weight when predicting. This makes sense i
 
 To see if we can increase the models score, we train a Random Forest classifier to be ensembled with our XGBoost model. After training the Random Forest model and increasing the number of trees, the classifier gives us an AUC score of .669. Random Forest has a 67% chance of correctly predicting between our two classes. This score is higher than XGBoost so we then ensemble the two models by averaging their predictions and see if it produces an even higher AUC score.
 
-####### Ensemble
+######  Ensemble
 
 To create a final model that uses both our trained XGBoost and Random Forest classifiers, we take an average of the predicted probabilities of the two classes. The averaged probability is then used to predict a class.
 This ensembled model gives us an AUC score of .68. This is a .07 increase from our base XGBoost model. This AUC tells us that our model has a 68% chance of correctly distinguishing between our two classes.
@@ -346,7 +353,11 @@ This ensembled model gives us an AUC score of .68. This is a .07 increase from o
 
 At prediction time, if we want to know if a user will listen to a song we will join the user features and the song features of that song and predict. The function ‘get_top_songs’, takes in a user id as an argument and recommends five songs by returning the five songs with the highest probability of belonging to our class representing a high listen count.
 
-Above shows the recommended songs for user ‘f1ccb26d0d49490016747f6592e6f7b1e53a9e54'. Besides AUC score, another way we can evaluate the recommendation system is by seeing if recommended songs are similar to what that user has listened to. Below are the users top 5 listened to songs. How did we do?
+![](images/get_top_songs.png)
+
+Above shows the recommended songs for user ‘f1ccb26d0d49490016747f6592e6f7b1e53a9e54'. Besides AUC score, another way we can evaluate the recommendation system is by seeing if recommended songs are similar to what that user has listened to. Below are the users top 5 listened to songs.
+
+![](images/user_song_count.png)
 
 #### Next steps
 
